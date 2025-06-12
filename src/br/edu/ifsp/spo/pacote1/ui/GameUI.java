@@ -22,7 +22,6 @@ public interface GameUI {
     int requestRoundNumber();
     void renderGeneralResult(Player player1, Player player2);
     List<String> findFileNames(List<Card> hand) ;
-    void renderVisualHand(List<String> files) throws IOException;
-
     void imprimirCartas(List<String> fileNames);
+    void limparTela();
 }

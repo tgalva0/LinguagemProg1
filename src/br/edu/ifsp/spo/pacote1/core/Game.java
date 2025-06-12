@@ -62,7 +62,7 @@ public class Game {
                 this.player1.receiveCard(deck.drawcard());
                 this.player2.receiveCard(deck.drawcard());
             }
-            System.out.flush();
+            ui.limparTela();
         }
 
         public void restart() {
@@ -122,7 +122,7 @@ public class Game {
                     player.receiveCard(deck.drawcard());
                 }
 
-                System.out.flush();
+                ui.limparTela();
             } while (resposta == PlayerAction.HIT);
         }
 
