@@ -23,4 +23,6 @@ public interface GameUI {
     void renderGeneralResult(Player player1, Player player2);
     List<String> findFileNames(List<Card> hand) ;
     void renderVisualHand(List<String> files) throws IOException;
+
+    void imprimirCartas(List<String> fileNames);
 }

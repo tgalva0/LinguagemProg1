@@ -62,6 +62,7 @@ public class Game {
                 this.player1.receiveCard(deck.drawcard());
                 this.player2.receiveCard(deck.drawcard());
             }
+            System.out.flush();
         }
 
         public void restart() {
@@ -108,7 +109,7 @@ public class Game {
             do {
                 if(!(player instanceof PlayerIA)) {
                     ui.printHand(player.getHand(), scorer.calculateScore(player.getHand()));
-                    ui.renderVisualHand(ui.findFileNames(player.getHand()));
+                    ui.imprimirCartas(ui.findFileNames(player.getHand()));
                     resposta = ui.requestAction(player);
                 } else {
                     resposta = ((PlayerIA) player).makeDecision(scorer.calculateScore(player.getHand()));
@@ -120,6 +121,8 @@ public class Game {
                     }
                     player.receiveCard(deck.drawcard());
                 }
+
+                System.out.flush();
             } while (resposta == PlayerAction.HIT);
         }
 

@@ -24,7 +24,9 @@ public class TerminalGameUI implements GameUI {
     public String requestPlayerName(int playerNumber) {
         var scanner = new Scanner(System.in);
         System.out.println("\n\nDigite o nome do player " + playerNumber + ": ");
-        return scanner.nextLine();
+        var result = scanner.nextLine();
+        System.out.flush();
+        return result;
     }
 
     public Scorer requestGameMode(Optional<Integer> TestModeInput) {
@@ -36,7 +38,7 @@ public class TerminalGameUI implements GameUI {
         } else {
             response = TestModeInput.get();
         }
-
+            System.out.flush();
         if(response == 2) {
             return new AceElevenScorer();
         }
@@ -54,6 +56,7 @@ public class TerminalGameUI implements GameUI {
         while(!(resposta == 1|| resposta == 2)) {
             System.out.println("\n\nQual ação você deseja fazer, " + player.getName() + "?: \nHIT(1)\nSTAND(2)");
             resposta = scanner.nextInt();
+            System.out.flush();
         }
         return switch(resposta) {
             case 1 -> PlayerAction.HIT;
@@ -87,6 +90,7 @@ public class TerminalGameUI implements GameUI {
         while(!(resposta == 1|| resposta == 2)) {
             System.out.println("\n\nQual tipo de jogo deseja?: \nContra outro player(1)\nContra a IA(2)");
             resposta = scanner.nextInt();
+            System.out.flush();
         }
         if (resposta == 1) {
             return new Player(this.requestPlayerName(2));
@@ -107,6 +111,7 @@ public class TerminalGameUI implements GameUI {
 
         System.out.println("\n\nQuantas partidas deseja jogar? (default = 10) :");
         resposta = scanner.nextInt();
+        System.out.flush();
 
         return resposta;
     }
@@ -270,4 +275,49 @@ public class TerminalGameUI implements GameUI {
             System.out.println(linhaMontada);
         }
     }
+
+    public void imprimirCartas(List<String> caminhosArquivos) {
+        List<String[]> cartas = new ArrayList<>();
+
+        // Ler cada arquivo e armazenar suas linhas
+        for (String caminho : caminhosArquivos) {
+            try {
+                List<String> linhas = Files.readAllLines(Paths.get(caminho));
+                cartas.add(linhas.toArray(new String[0]));
+            } catch (IOException e) {
+                System.err.println("Erro ao ler arquivo: " + caminho);
+            }
+        }
+
+        // Número máximo de cartas por linha
+        int cartasPorLinha = 5;
+        int totalCartas = cartas.size();
+
+        for (int startIndex = 0; startIndex < totalCartas; startIndex += cartasPorLinha) {
+            int endIndex = Math.min(startIndex + cartasPorLinha, totalCartas);
+
+            // Determinar o número máximo de linhas dessa fileira de cartas
+            int maxLinhas = cartas.subList(startIndex, endIndex)
+                    .stream()
+                    .mapToInt(arr -> arr.length)
+                    .max()
+                    .orElse(0);
+
+            // Imprimir a fileira de cartas lado a lado
+            for (int i = 0; i < maxLinhas; i++) {
+                StringBuilder linhaMontada = new StringBuilder();
+                for (int j = startIndex; j < endIndex; j++) {
+                    String[] carta = cartas.get(j);
+                    if (i < carta.length) {
+                        linhaMontada.append(carta[i]).append("   "); // Espaço entre cartas
+                    } else {
+                        linhaMontada.append(" ".repeat(carta[0].length())).append("   "); // Espaço vazio se faltar linhas
+                    }
+                }
+                System.out.println(linhaMontada);
+            }
+            System.out.println(); // Linha vazia para separar as fileiras
+        }
+    }
+
 }
